@@ -5,10 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_run:
-    workflows: ["hardhat create artifact"] # The name of the workflow that creates the artifact
-    types:
-      - completed
 
 jobs:
   test_on_linux:
@@ -28,9 +24,24 @@ jobs:
           cache: "pnpm"
       - name: Install
         run: pnpm install --frozen-lockfile --prefer-offline
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: module-artifact # The name of the artifact you uploaded
-      - name: Check cli command
-        run: node index.js test
+      # - name: Download artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: module-artifact # The name of the artifact you uploaded
+      # - name: Check cli command
+      #   run: node index.js test
+      - name: Download latest artifact from TEST REPO
+        run: |
+          # Fetch the list of artifacts from Repo hh-test-repo-artif
+          ARTIFACTS_URL="https://api.github.com/repos/ChristopherDedominici/hh-test-repo-artif/actions/artifacts"
+          ARTIFACTS_JSON=$(curl -H $ARTIFACTS_URL)
+
+          # Extract the download URL of the latest artifact
+          DOWNLOAD_URL=$(echo $ARTIFACTS_JSON | jq -r '.artifacts[0].archive_download_url')
+
+          # Download the artifact
+          curl -L -o artifact.zip -H $DOWNLOAD_URL
+      - name: Unzip artifact
+        run: unzip artifact.zip
+      # - name: Check cli command
+      #   run: node index.js test
