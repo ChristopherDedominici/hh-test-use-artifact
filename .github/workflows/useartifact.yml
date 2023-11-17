@@ -40,7 +40,7 @@ jobs:
           DOWNLOAD_URL=$(echo $ARTIFACTS_JSON | jq -r '.artifacts[0].archive_download_url')
 
           # Download the artifact
-          curl -L -o artifact.zip $DOWNLOAD_URL
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L -o artifact.zip $DOWNLOAD_URL
       - name: Unzip artifact
         run: unzip artifact.zip
       # - name: Check cli command
