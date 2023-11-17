@@ -34,13 +34,13 @@ jobs:
         run: |
           # Fetch the list of artifacts from Repo hh-test-repo-artif
           ARTIFACTS_URL="https://api.github.com/repos/ChristopherDedominici/hh-test-repo-artif/actions/artifacts"
-          ARTIFACTS_JSON=$(curl -H $ARTIFACTS_URL)
+          ARTIFACTS_JSON=$(curl $ARTIFACTS_URL)
 
           # Extract the download URL of the latest artifact
           DOWNLOAD_URL=$(echo $ARTIFACTS_JSON | jq -r '.artifacts[0].archive_download_url')
 
           # Download the artifact
-          curl -L -o artifact.zip -H $DOWNLOAD_URL
+          curl -L -o artifact.zip $DOWNLOAD_URL
       - name: Unzip artifact
         run: unzip artifact.zip
       # - name: Check cli command
