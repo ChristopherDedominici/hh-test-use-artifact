@@ -33,6 +33,4 @@ jobs:
         with:
           name: module-artifact # The name of the artifact you uploaded
       - name: Check cli command
-        shell: bash
-        run: |
-          node index.js test
+        run: node index.js test
