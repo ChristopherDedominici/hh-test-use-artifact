@@ -43,5 +43,16 @@ jobs:
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L -o artifact.zip $DOWNLOAD_URL
       - name: Unzip artifact
         run: unzip artifact.zip
+      - name: Install packages from tgz packages
+        run: for pkg in ./*.tgz; do pnpm install "$pkg"; done
+      - name: Install packages from store
+        run: pnpm install
       - name: Check cli command
-        run: node index.js test
+        run: |
+          output=$(node index.js test)
+          if [ "$output" = "test command working" ]; then
+            echo "Output matches"
+          else
+            echo "Output does not match"
+            exit 1
+          fi
